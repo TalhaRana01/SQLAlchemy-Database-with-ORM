@@ -20,3 +20,7 @@ class User(Base):
     return f"<User(id={self.id}, name={self.name}, email={self.email})>"
   
   
+# Create Table
+
+def create_tables():
+  Base.metadata.create_all(engine)
