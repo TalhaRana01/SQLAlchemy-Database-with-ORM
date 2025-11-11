@@ -4,96 +4,94 @@ from db import engine
 
 
 class Base(DeclarativeBase):
-  pass
+    pass
 
-# User Model / user table
 
+# Association Table for Many-to-Many (User ↔ Address)
+user_address_association = Table(
+    "user_address_association",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
+    Column("address_id", Integer, ForeignKey("address.id", ondelete="CASCADE"), primary_key=True)
+)
+
+
+# User Model
 class User(Base):
-  __tablename__ ="users"
-  
-  id: Mapped[int] = mapped_column(primary_key=True)
-  name : Mapped[str] = mapped_column(String(50), nullable=False)
-  email : Mapped[str] = mapped_column(String, nullable=False, unique=True)
-  phone : Mapped[str] = mapped_column(String, nullable=False)
-  
-  
-  ## One to Many : User to Post
-  # Relationshiop user to post
-  # posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
-  
-  ## one-to-one User to profile
-  profile : Mapped["Profile"] = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete")
-  address : Mapped[list["Address"]]= relationship("Address", back_populates="user", cascade="all, delete")
-  
-  def __repr__(self)-> str:
-    return f"<User(id={self.id}, name={self.name}, email={self.email})>"
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50), nullable=False)
+    email: Mapped[str] = mapped_column(String, nullable=False, unique=True)
+    phone: Mapped[str] = mapped_column(String, nullable=False)
+
+    # One-to-Many (User -> Posts)
+    posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
+
+    # One-to-One (User -> Profile)
+    profile: Mapped["Profile"] = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete")
+
+    # Many-to-Many (User <-> Address)
+    addresses: Mapped[list["Address"]] = relationship(
+        "Address", secondary=user_address_association, back_populates="users"
+    )
+
+    def __repr__(self) -> str:
+        return f"<User(id={self.id}, name={self.name}, email={self.email})>"
 
 
 # Post Model
 class Post(Base):
-  __tablename__ = "posts"
-  
-  id :Mapped[int] = mapped_column(primary_key=True)
-  user_id : Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-  title : Mapped[str] = mapped_column(String, nullable=False)
-  content : Mapped[str] = mapped_column(String, nullable=False)
-  
-  # Relationship post to user
-  user : Mapped["User"] = relationship("User", back_populates="posts")
-  
-  
-  
-  
-  def __repr__(self) -> str:
-    return f"<Post(id={self.id}, title={self.name})>"
-  
-  
-  
-#  Profile Model
+    __tablename__ = "posts"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    title: Mapped[str] = mapped_column(String, nullable=False)
+    content: Mapped[str] = mapped_column(String, nullable=False)
+
+    # Relationship back to user
+    user: Mapped["User"] = relationship("User", back_populates="posts")
+
+    def __repr__(self) -> str:
+        return f"<Post(id={self.id}, title={self.title})>"
+
+
+# Profile Model (One-to-One)
 class Profile(Base):
-  __tablename__ = "profile"
-  
-  id :Mapped[int] = mapped_column(primary_key=True)
-  user_id : Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
-  bio : Mapped[str] = mapped_column(String, nullable=False)
-  
-  # Relationship profile to user
-  user : Mapped["User"] = relationship("User", back_populates="profile")
-  
-  def __repr__(self) -> str:
-  
-    return f"<Post(id={self.id}, title={self.user_id})>"
+    __tablename__ = "profile"
 
-# Address model
+    id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
+    bio: Mapped[str] = mapped_column(String, nullable=False)
+
+    user: Mapped["User"] = relationship("User", back_populates="profile")
+
+    def __repr__(self) -> str:
+        return f"<Profile(id={self.id}, user_id={self.user_id})>"
+
+
+# Address Model (Many-to-Many)
 class Address(Base):
-  __tablename__ = "address"
-  
-  id: Mapped[int] = mapped_column(primary_key=True)
-  street : Mapped[str] = mapped_column(String, nullable=False)
-  country : Mapped[str] = mapped_column(nullable=True, unique=True)
-  
-  
-  user : Mapped[list["User"]] = relationship("User", back_populates="address")
-  
-  def __repr__(self)-> str:
-    return f"<Address id={self.id} street={self.street} country={self.country} "
-  
-  
-  
-  
-user_address_associaltion = Table(
-  "user_address_associaltion",
-  Base.metadata,
-  Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
-  Column("address_id", Integer, ForeignKey("address.id", ondelete="CASCADE"), primary_key=True) 
-)
-  
-  
+    __tablename__ = "address"
 
-# Create Table
+    id: Mapped[int] = mapped_column(primary_key=True)
+    street: Mapped[str] = mapped_column(String, nullable=False)
+    country: Mapped[str] = mapped_column(String, nullable=True)
+
+    # Many-to-Many relationship with User
+    users: Mapped[list["User"]] = relationship(
+        "User", secondary=user_address_association, back_populates="addresses"
+    )
+
+    def __repr__(self) -> str:
+        return f"<Address(id={self.id}, street={self.street}, country={self.country})>"
+
+
+# Create Tables
 def create_tables():
-  Base.metadata.create_all(engine)
-  
-# Delete Table
-def drop_table():
-  Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+
+
+# Drop Tables
+def drop_tables():
+    Base.metadata.drop_all(engine)
