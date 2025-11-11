@@ -1,6 +1,6 @@
 # from models import create_tables , drop_table
-from profile_model import create_tables
+from users_models import create_table
 
 
-# create_tables()
+create_table()
 # drop_table()
