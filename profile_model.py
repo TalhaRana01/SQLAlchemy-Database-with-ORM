@@ -1,5 +1,5 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
-from sqlalchemy import String, ForeignKey
+from sqlalchemy import String, ForeignKey, Table, Column, Integer
 from db import engine
 
 
@@ -22,18 +22,19 @@ class User(Base):
   # posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
   
   ## one-to-one User to profile
-  profile : Mapped["Profile"] = relationship("Prfile", back_populates="user", uselist=False, cascade="all, delete")
+  profile : Mapped["Profile"] = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete")
+  address : Mapped[list["Address"]]= relationship("Address", back_populates="user", cascade="all, delete")
   
   def __repr__(self)-> str:
     return f"<User(id={self.id}, name={self.name}, email={self.email})>"
 
 
-## Post Model
+# Post Model
 class Post(Base):
-  __tablename__ = "Post"
+  __tablename__ = "posts"
   
   id :Mapped[int] = mapped_column(primary_key=True)
-  user_id : Mapped[int] = mapped_column(ForeignKey("user_id", ondelete="CASECADE"), nullable=False)
+  user_id : Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
   title : Mapped[str] = mapped_column(String, nullable=False)
   content : Mapped[str] = mapped_column(String, nullable=False)
   
@@ -53,7 +54,7 @@ class Profile(Base):
   __tablename__ = "profile"
   
   id :Mapped[int] = mapped_column(primary_key=True)
-  user_id : Mapped[int] = mapped_column(ForeignKey("user_id", ondelete="CASECADE"), nullable=False, unique=True)
+  user_id : Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False, unique=True)
   bio : Mapped[str] = mapped_column(String, nullable=False)
   
   # Relationship profile to user
@@ -72,15 +73,20 @@ class Address(Base):
   country : Mapped[str] = mapped_column(nullable=True, unique=True)
   
   
-  user : Mapped[list[User]] = relationship("User", back_populates="address")
+  user : Mapped[list["User"]] = relationship("User", back_populates="address")
   
   def __repr__(self)-> str:
-    return f"<Profile id={self.id} street={self.street} country={self.country} "
+    return f"<Address id={self.id} street={self.street} country={self.country} "
   
   
   
   
-  
+user_address_associaltion = Table(
+  "user_address_associaltion",
+  Base.metadata,
+  Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
+  Column("address_id", Integer, ForeignKey("address.id", ondelete="CASCADE"), primary_key=True) 
+)
   
   
 
