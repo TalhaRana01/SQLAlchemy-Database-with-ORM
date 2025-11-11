@@ -69,7 +69,7 @@ class Address(Base):
 
     # Many-to-Many relationship with User
     users: Mapped[list["User"]] = relationship(
-        "User", secondary=user_address_association, back_populates="addresses"
+        "User", back_populates="addresses"
     )
 
     def __repr__(self) -> str:
