@@ -36,23 +36,3 @@ class Post(Base):
   
   # Relationship post to user
   user : Mapped["User"] = relationship("User", back_populates="posts")
-  
-  
-  
-  
-  def __repr__(self) -> str:
-    return f"<Post(id={self.id}, title={self.name})>"
-  
-  
-  
-
-  
-  
-
-# Create Table
-def create_tables():
-  Base.metadata.create_all(engine)
-  
-# Delete Table
-def drop_table():
-  Base.metadata.drop_all(engine)

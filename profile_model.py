@@ -19,7 +19,10 @@ class User(Base):
   
   ## One to Many : User to Post
   # Relationshiop user to post
-  posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
+  # posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
+  
+  ## one-to-one User to profile
+  profile : Mapped["Profile"] = relationship("Prfile", back_populates="user", uselist=False, cascade="all, delete")
   
   def __repr__(self)-> str:
     return f"<User(id={self.id}, name={self.name}, email={self.email})>"
@@ -45,7 +48,39 @@ class Post(Base):
   
   
   
+#  Profile Model
+class Profile(Base):
+  __tablename__ = "profile"
+  
+  id :Mapped[int] = mapped_column(primary_key=True)
+  user_id : Mapped[int] = mapped_column(ForeignKey("user_id", ondelete="CASECADE"), nullable=False, unique=True)
+  bio : Mapped[str] = mapped_column(String, nullable=False)
+  
+  # Relationship profile to user
+  user : Mapped["User"] = relationship("User", back_populates="profile")
+  
+  def __repr__(self) -> str:
+  
+    return f"<Post(id={self.id}, title={self.user_id})>"
 
+# Address model
+class Address(Base):
+  __tablename__ = "address"
+  
+  id: Mapped[int] = mapped_column(primary_key=True)
+  street : Mapped[str] = mapped_column(String, nullable=False)
+  country : Mapped[str] = mapped_column(nullable=True, unique=True)
+  
+  
+  user : Mapped[list[User]] = relationship("User", back_populates="address")
+  
+  def __repr__(self)-> str:
+    return f"<Profile id={self.id} street={self.street} country={self.country} "
+  
+  
+  
+  
+  
   
   
 
