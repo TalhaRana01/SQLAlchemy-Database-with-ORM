@@ -7,15 +7,6 @@ class Base(DeclarativeBase):
     pass
 
 
-# Association Table for Many-to-Many (User ↔ Address)
-user_address_association = Table(
-    "user_address_association",
-    Base.metadata,
-    Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
-    Column("address_id", Integer, ForeignKey("address.id", ondelete="CASCADE"), primary_key=True)
-)
-
-
 # User Model
 class User(Base):
     __tablename__ = "users"
@@ -32,9 +23,7 @@ class User(Base):
     profile: Mapped["Profile"] = relationship("Profile", back_populates="user", uselist=False, cascade="all, delete")
 
     # Many-to-Many (User <-> Address)
-    addresses: Mapped[list["Address"]] = relationship(
-        "Address", secondary=user_address_association, back_populates="users"
-    )
+    addresses: Mapped[list["Address"]] = relationship("Address", back_populates="users")
 
     def __repr__(self) -> str:
         return f"<User(id={self.id}, name={self.name}, email={self.email})>"
@@ -85,6 +74,15 @@ class Address(Base):
 
     def __repr__(self) -> str:
         return f"<Address(id={self.id}, street={self.street}, country={self.country})>"
+    
+    
+# Association Table for Many-to-Many (User ↔ Address)
+user_address_association = Table(
+    "user_address_association",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True),
+    Column("address_id", Integer, ForeignKey("address.id", ondelete="CASCADE"), primary_key=True)
+)
 
 
 # Create Tables
