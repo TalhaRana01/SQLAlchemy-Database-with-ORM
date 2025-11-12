@@ -1,11 +1,16 @@
 # from models import create_tables , drop_table
-from users_models import create_table
-from crud import create_user
+from users_models import create_table, delete_table
+from crud import create_user, create_post
 
 
-create_table()
-# drop_table()
+## Create Tables in Database
+# create_table()
+## Delete Tables from Database
+# delete_table()
 
 
 # Users
-create_user("Talha Rana", "example@gmail.com")
+# create_user("Talha Rana", "example@gmail.com")
+
+## Posts
+create_post(1, "First Post", "This is the content of the first post.")

@@ -1,8 +1,8 @@
 from users_models import User, Post
 from db import SessionLocal
 
-# Create User
 
+# Create User
 def create_user(name: str, email:str):
   with SessionLocal() as session:
     user = User(name=name, email=email)
@@ -10,6 +10,16 @@ def create_user(name: str, email:str):
     session.commit()
     session.refresh(user)
     return user
+  
+
+# Create Post for a User
+def create_post(user_id: int, title: str, content:str):
+  with SessionLocal() as session:
+    post = Post(user_id=user_id, title=title, content= content)
+    session.add(post)
+    session.commit()
+    session.refresh(post)
+    
   
   
   
