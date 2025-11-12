@@ -34,7 +34,7 @@ class Post(Base):
   user: Mapped["User"] = relationship("User", back_populates="posts")
 
   def __repr__(self) -> str:
-        return f"<Post(id={self.id}, title={self.title})>"
+        return f"<Post(id={self.id}, title={self.title}, content={self.content})>"
 
     
 # Association Table for Many-to-Many (User ↔ Address)

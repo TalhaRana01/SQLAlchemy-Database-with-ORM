@@ -17,11 +17,11 @@ def get_user(user_id: int):
     user = session.get_one(User, user_id)
     return user
   
-# # Read User by ID
-# def delete_user(user_id: int):
-#   with SessionLocal() as session:
-#     user = session.delete(User, user_id)
-#     return user
+# # Read Post by ID
+def get_post(post_id: int):
+  with SessionLocal() as session:
+    post = session.get_one(Post, post_id)
+    return post
     
   
 
