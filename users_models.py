@@ -14,6 +14,7 @@ class User(Base):
   id :  Mapped[int] = mapped_column(primary_key=True)
   name: Mapped[str] = mapped_column(String(50), nullable=False)
   email:Mapped[str] = mapped_column(String, nullable=False, unique=True)
+  
   # One-to-Many (User -> Posts)
   posts: Mapped[list["Post"]] = relationship("Post", back_populates="user", cascade="all, delete")
   

@@ -11,3 +11,5 @@ def create_user(name: str, email:str):
     session.refresh(user)
     return user
   
+  
+  
