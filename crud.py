@@ -1,6 +1,6 @@
 from users_models import User, Post
 from db import SessionLocal
-from sqlalchemy import select
+from sqlalchemy import select, update
 
 # Create User
 def create_user(name: str, email:str):
@@ -100,6 +100,17 @@ def get_all_posts():
 #     return posts
 
 
-    
+# upddate post title
+# def update_post_title(post_id: int, title: str):
+#   with SessionLocal() as session:
+#     post = session.get(Post, post_id)
+#     if post:
+#       post.title = title
+#       session.commit()
+#       session.refresh(post)
+#     return post 
   
+
+     
+
   

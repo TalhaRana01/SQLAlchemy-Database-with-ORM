@@ -22,7 +22,7 @@ from crud import *
 # print(get_user(2))
 
 ## Update User Email
-print(update_user_email(1, "mtalharana093@gmail.com"))
+# print(update_user_email(1, "mtalharana093@gmail.com"))
 
 ##----------------------
 ## Posts
@@ -41,3 +41,4 @@ print(update_user_email(1, "mtalharana093@gmail.com"))
 
 # print(get_posts_by_user(1))
 # print(get_posts_by_user(2))
+print(update_post_title(1, "method updated title"))
