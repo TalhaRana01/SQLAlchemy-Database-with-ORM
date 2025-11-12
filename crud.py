@@ -38,6 +38,16 @@ def create_user(name: str, email:str):
 #     statement = select(User).where(User.id == user_id)
 #     user = session.scalars(statement).one()
 #     return user
+
+# Update User with new email
+def update_user_email(user_id:int, new_email:str):
+  with SessionLocal() as session:
+    user = session.get(User, user_id)
+    if user:
+      user.email = new_email
+      session.commit()
+      session.refresh(user)
+    return user
   
 ## Method 1: Get Single Post by ID
 # def get_post(post_id: int):
@@ -55,12 +65,12 @@ def create_user(name: str, email:str):
   
 
 # Create Post for a User
-# def create_post(user_id: int, title: str, content:str):
-#   with SessionLocal() as session:
-#     post = Post(user_id=user_id, title=title, content= content)
-#     session.add(post)
-#     session.commit()
-#     session.refresh(post)
+def create_post(user_id: int, title: str, content:str):
+  with SessionLocal() as session:
+    post = Post(user_id=user_id, title=title, content= content)
+    session.add(post)
+    session.commit()
+    session.refresh(post)
 
 ## Method 1: Get All Posts
 # def get_all_posts():
@@ -74,6 +84,22 @@ def get_all_posts():
     posts = select(Post)
     return posts
     
+## Method 1: Read all posts for an user
+# def get_posts_by_user(user_id: int):
+#   with SessionLocal() as session:
+#     statement = select(Post).where(Post.user_id == user_id)
+#     posts = session.scalars(statement).all()
+#     return posts
   
+  
+## Method 1: Read all posts for an user
+# def get_posts_by_user(user_id: int):
+#   with SessionLocal() as session:
+#     user = session.get(User, user_id)
+#     posts = user.posts if user else []
+#     return posts
+
+
+    
   
   

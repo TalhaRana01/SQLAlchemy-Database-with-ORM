@@ -21,15 +21,23 @@ from crud import *
 ## Get Single User by ID
 # print(get_user(2))
 
+## Update User Email
+print(update_user_email(1, "mtalharana093@gmail.com"))
+
 ##----------------------
 ## Posts
 ##----------------------
 
 ## Create Post
 # create_post(1, "First Post", "This is the content of the first post.")
+# create_post(2, "Second Post", "This is the content of the second post.")
+# create_post(3, "Third Post", "This is the content of the third post.")
 
 ## Get All Posts
-print(get_all_posts())
+# print(get_all_posts())
 
 ## Get single Post by ID
 # print(get_post(1))
+
+# print(get_posts_by_user(1))
+# print(get_posts_by_user(2))
