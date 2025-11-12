@@ -49,6 +49,15 @@ def update_user_email(user_id:int, new_email:str):
       session.refresh(user)
     return user
   
+## Deleete User
+def delete_user(user_id:int):
+  with SessionLocal() as session:
+    user = session.get(User, user_id)
+    if user:
+      session.delete(user)
+      session.commit()
+    return user
+  
 ## Method 1: Get Single Post by ID
 # def get_post(post_id: int):
 #   with SessionLocal() as session:
@@ -101,15 +110,23 @@ def get_all_posts():
 
 
 # upddate post title
-# def update_post_title(post_id: int, title: str):
-#   with SessionLocal() as session:
-#     post = session.get(Post, post_id)
-#     if post:
-#       post.title = title
-#       session.commit()
-#       session.refresh(post)
-#     return post 
+def update_post_title(post_id: int, title: str):
+  with SessionLocal() as session:
+    post = session.get(Post, post_id)
+    if post:
+      post.title = title
+      session.commit()
+      session.refresh(post)
+    return post 
   
+## Delete Post
+def delete_post(post_id: int):
+  with SessionLocal() as session:
+    post = session.get(Post, post_id)
+    if post:
+      session.delete(post)
+      session.commit()
+    return post
 
      
 

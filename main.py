@@ -24,6 +24,9 @@ from crud import *
 ## Update User Email
 # print(update_user_email(1, "mtalharana093@gmail.com"))
 
+## Delete User
+delete_user(1)
+
 ##----------------------
 ## Posts
 ##----------------------
@@ -33,12 +36,23 @@ from crud import *
 # create_post(2, "Second Post", "This is the content of the second post.")
 # create_post(3, "Third Post", "This is the content of the third post.")
 
+
+
 ## Get All Posts
 # print(get_all_posts())
+
 
 ## Get single Post by ID
 # print(get_post(1))
 
+
+## Get post by User
 # print(get_posts_by_user(1))
 # print(get_posts_by_user(2))
-print(update_post_title(1, "method updated title"))
+
+
+## Update post title
+# print(update_post_title(1, "method updated title"))
+
+## Delete Post
+delete_post(5)
