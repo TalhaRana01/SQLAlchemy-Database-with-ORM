@@ -10,6 +10,19 @@ def create_user(name: str, email:str):
     session.commit()
     session.refresh(user)
     return user
+
+# Read User by ID
+def get_user(user_id: int):
+  with SessionLocal() as session:
+    user = session.get_one(User, user_id)
+    return user
+  
+# # Read User by ID
+# def delete_user(user_id: int):
+#   with SessionLocal() as session:
+#     user = session.delete(User, user_id)
+#     return user
+    
   
 
 # Create Post for a User
